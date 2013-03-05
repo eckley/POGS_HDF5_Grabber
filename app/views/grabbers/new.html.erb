@@ -1,0 +1,30 @@
+<h1>Enter details for galaxy</h1>
+
+<%= form_for @grabber do |f| %>
+    <% if @grabber.errors.any? %>
+        <div id="errorExplanation">
+          <h2><%= pluralize(@grabber.errors.count, "error") %> prohibited
+            this request from being made:</h2>
+          <ul>
+            <% @grabber.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <p>
+      <%= f.label :galaxy %><br />
+      <%= f.text_field :galaxy %>
+    </p>
+    <p>
+      <%= f.label :features %><br />
+      <%= f.select(:features, options_for_select(@grabber.list_of_features),{}, {:multiple => true}) %>
+    </p>
+    <p>
+      <%= f.label :layers %><br />
+      <%= f.select(:layers, options_for_select(@grabber.list_of_layers),{}, {:multiple => true}) %>
+    </p>
+    <p><%= f.submit "Send Request" %></p>
+<% end %>
+
+
