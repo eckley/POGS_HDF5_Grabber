@@ -3,9 +3,10 @@ class Grabber
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-  attr_accessor :galaxy, :features, :layers
+  attr_accessor :galaxy, :features, :layers, :email
 
   validates :galaxy, :presence => true
+  validates :email, :presence => true
   validates :features, :presence => true
   validates :layers, :presence => true
   validate :check_features, :check_layers

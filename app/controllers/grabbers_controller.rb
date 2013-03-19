@@ -1,7 +1,10 @@
 class GrabbersController < ApplicationController
   def new
     @grabber = Grabber.new
-
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @grabber }
+    end
   end
 
   def create
@@ -13,9 +16,17 @@ class GrabbersController < ApplicationController
       #
       ##  Or if ssh is required see http://johanharjono.com/archives/602
       flash[:notice] = "Request sent!"
-      redirect_to root_url
+      respond_to do |format|
+        format.html {redirect_to root_url}
+        format.json { render json: {:submit => "success"}}
+      end
+
     else
-      render :action => 'new'
+      respond_to do |format|
+        format.html {render :action => 'new'}
+        format.json { render json: @grabber }
+      end
+
     end
   end
 end
