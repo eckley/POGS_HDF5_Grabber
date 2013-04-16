@@ -10,10 +10,19 @@ class Grabber
   validate :check_features, :check_layers
 
   def list_of_features
-        return  Hash['-f0' => '--best_fit','-f1'=>'--percentile_50']
+        return  Hash[
+            '-f0' => '--best_fit',
+            '-f1'=>'--percentile_50'
+        ]
   end
   def list_of_layers
-        return Hash['-l0'=>'--f_mu_sfh','-l1'=>'--f_mu_ir']
+        return Hash[
+            '-l0'=>'--f_mu_sfh',
+            '-l1'=>'--f_mu_ir'
+        ]
+  end
+  def  extract_script_path
+    return 'path/to/extract_fits_from_hdf5.py'
   end
 
   def check_features
@@ -75,6 +84,6 @@ class Grabber
     return temp_string
   end
   def request_string
-    return "python path/to/extract_fits_from_hdf5.py '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
+    return "python #{extract_script_path} '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
   end
 end
