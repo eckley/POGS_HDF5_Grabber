@@ -7,35 +7,45 @@ class Grabber
 
   validates :galaxy, :presence => true
   validates :email, :presence => true
-  validates :features, :presence => true
-  validates :layers, :presence => true
   validate :check_features, :check_layers
 
   def list_of_features
-        return  Hash['--best_fit'=>'-f0','--percentile_50'=>'-f1']
+        return  Hash['-f0' => '--best_fit','-f1'=>'--percentile_50']
   end
   def list_of_layers
-        return Hash['--f_mu_sfh'=>'-l0','--f_mu_ir'=>'-l1']
+        return Hash['-l0'=>'--f_mu_sfh','-l1'=>'--f_mu_ir']
   end
 
   def check_features
-    if features.length == 1
-      errors.add(:features,"You must select at least one feature")
-    end
-    features.each do |feature|
-      if !self.list_of_features.value?(feature) && feature != ''
-        errors.add(:features,"not valid: #{feature}")
+    list = list_of_features
+    count = 0
+    if features
+      features.each do |key|
+        if list.has_key?(key)
+          count += 1
+        else
+          errors.add(:features,"not valid: #{key}")
+        end
       end
+    end
+    if count == 0
+      errors.add(:features,"You must select at least one valid feature")
     end
   end
   def check_layers
-    if layers.length == 1
-      errors.add(:layers,"You must select at least one layer")
-    end
-    layers.each do |layer|
-      if !self.list_of_layers.value?(layer) && layer != ''
-        errors.add(:layers,"not valid: #{layer}")
+    list = list_of_layers
+    count = 0
+    if layers
+      layers.each do |key|
+        if list.has_key?(key)
+          count += 1
+        else
+          errors.add(:layers,"not valid: #{key}")
+        end
       end
+    end
+    if count == 0
+      errors.add(:layers,"You must select at least one valid layer")
     end
   end
 
@@ -50,21 +60,21 @@ class Grabber
   end
   def get_layers
     temp_string = ''
-    for layer in layers[1..-1]
-      temp_string << layer
+    layers.each do |feature|
+      temp_string << feature
       temp_string << ' '
     end
     return temp_string
   end
   def get_features
     temp_string = ''
-    for feature in features[1..-1]
+    features.each do |feature|
       temp_string << feature
       temp_string << ' '
     end
     return temp_string
   end
   def request_string
-    return "echo path/to/extract_fits_from_hdf5.py '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
+    return "python path/to/extract_fits_from_hdf5.py '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
   end
 end

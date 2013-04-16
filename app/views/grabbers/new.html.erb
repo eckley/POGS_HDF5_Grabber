@@ -1,4 +1,4 @@
-<h1>Enter details for galaxy</h1>
+<h1 xmlns="http://www.w3.org/1999/html">Enter details for galaxy</h1>
 
 <%= form_for @grabber do |f| %>
     <% if @grabber.errors.any? %>
@@ -20,15 +20,19 @@
       <%= f.label :galaxy %><br />
       <%= f.text_field :galaxy %>
     </p>
-    <p>
-      <%= f.label :features %><br />
-      <%= f.select(:features, options_for_select(@grabber.list_of_features),{}, {:multiple => true}) %>
+    <p> Features: <br />
+        <% @grabber.list_of_features.each do |key, value| %>
+            <%= check_box_tag('grabber[features][]',key) %>
+            <%= label_tag(:features['key'], value) %>    <br />
+        <% end  %>
+
     </p>
+    <p> Layers: <br />
+        <% @grabber.list_of_layers.each do |key, value| %>
+            <%= check_box_tag('grabber[layers][]',key) %>
+            <%= label_tag(:layers['key'], value) %>    <br />
+        <% end  %>
 
-
-    <p>
-      <%= f.label :layers %><br />
-      <%= f.select(:layers, options_for_select(@grabber.list_of_layers),{}, {:multiple => true}) %>
     </p>
     <p><%= f.submit "Send Request" %></p>
 <% end %>
