@@ -15,7 +15,7 @@ class Grabber
         return  Hash['--best_fit'=>'-f0','--percentile_50'=>'-f1']
   end
   def list_of_layers
-        return Hash['--f_mu_sfh'=>'-l0','--f_mu_ir'=>'l1']
+        return Hash['--f_mu_sfh'=>'-l0','--f_mu_ir'=>'-l1']
   end
 
   def check_features
@@ -47,5 +47,24 @@ class Grabber
 
   def persisted?
     false
+  end
+  def get_layers
+    temp_string = ''
+    for layer in layers[1..-1]
+      temp_string << layer
+      temp_string << ' '
+    end
+    return temp_string
+  end
+  def get_features
+    temp_string = ''
+    for feature in features[1..-1]
+      temp_string << feature
+      temp_string << ' '
+    end
+    return temp_string
+  end
+  def request_string
+    return "echo path/to/extract_fits_from_hdf5.py '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
   end
 end

@@ -10,12 +10,12 @@ class GrabbersController < ApplicationController
   def create
     @grabber = Grabber.new(params[:grabber])
     if @grabber.valid?
-      #TODO send request, use pid = Process.spawn("cmd") and Process.detach(pid)
-      ##  Process.spawn("python", "extract_from_hdf5.py", @grabber.galaxy, @grabber.feature, @grabber.layer, '-0 '  )
-      #   Process.detach
-      #
-      ##  Or if ssh is required see http://johanharjono.com/archives/602
-      flash[:notice] = "Request sent!"
+
+     #run command
+      result = IO.popen(@grabber.request_string)
+      #log output
+      $grabber_log.info result.readlines
+      flash[:notice] = result.readlines
       respond_to do |format|
         format.html {redirect_to root_url}
         format.json { render json: {:submit => "success"}}
