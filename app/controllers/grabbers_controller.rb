@@ -1,3 +1,4 @@
+require "open3"
 class GrabbersController < ApplicationController
   def new
     @grabber = Grabber.new
@@ -12,20 +13,22 @@ class GrabbersController < ApplicationController
     if @grabber.valid?
 
      #run command
-      result = IO.popen(@grabber.request_string)
-      #log output
-      $grabber_log.info "command: #{@grabber.request_string}"
-      $grabber_log.info "result: #{result.readlines}"
+      Open3.popen2e(@grabber.request_string) {|stdin, stdout_and_stderr, wait_thr|
+        #log output
+        $grabber_log.info "command: #{@grabber.request_string}"
+        $grabber_log.info "result: #{stdout_and_stderr.readlines}"
+      }
+      msg = "Your Request has been submitted and you will be notified by email when it is ready. :) "
       flash[:notice] = "Your Request has been submitted and you will be notified by email when it is ready. :) "
       respond_to do |format|
         format.html {redirect_to root_url}
-        format.json { render json: {:submit => "success"}}
+        format.json { render json: {:submit => "success", 'msg'=> msg}}
       end
 
     else
       respond_to do |format|
         format.html {render :action => 'new'}
-        format.json { render json: @grabber }
+        format.json {render json: {:submit => "success", 'errors' => @grabber.errors}}
       end
 
     end
