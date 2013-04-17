@@ -23,14 +23,14 @@
     <p> Features: <br />
         <% @grabber.list_of_features.each do |key, value| %>
             <%= check_box_tag('grabber[features][]',key) %>
-            <%= label_tag(:features['key'], value) %>    <br />
+            <%= label_tag(:features['key'], "#{key}: #{value}") %>    <br />
         <% end  %>
 
     </p>
     <p> Layers: <br />
         <% @grabber.list_of_layers.each do |key, value| %>
             <%= check_box_tag('grabber[layers][]',key) %>
-            <%= label_tag(:layers['key'], value) %>    <br />
+            <%= label_tag(:layers['key'], "#{key}: #{value}") %>    <br />
         <% end  %>
 
     </p>

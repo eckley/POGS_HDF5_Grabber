@@ -8,23 +8,21 @@ class Grabber
   validates :galaxy, :presence => true
   validates :email, :presence => true
   validate :check_features, :check_layers
+  validate :check_email
 
   def list_of_features
-        return  Hash[
-            '-f0' => '--best_fit',
-            '-f1'=>'--percentile_50'
-        ]
+        return  Grabber_defaults['features']
   end
   def list_of_layers
-        return Hash[
-            '-l0'=>'--f_mu_sfh',
-            '-l1'=>'--f_mu_ir'
-        ]
-  end
-  def  extract_script_path
-    return 'path/to/extract_fits_from_hdf5.py'
+        return Grabber_defaults['layers']
   end
 
+  def check_email
+    safe_emails = Grabber_defaults['safe_emails']
+    unless email == '' || safe_emails.include?(email)
+        errors.add(:email,"Your email has not been authorised, please contact kevin.vinsen [@ ] uwa.edu.au")
+    end
+  end
   def check_features
     list = list_of_features
     count = 0
@@ -84,6 +82,6 @@ class Grabber
     return temp_string
   end
   def request_string
-    return "python #{extract_script_path} '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
+    return "python #{Grabber_defaults['extract_script_path']} '#{email}' '#{galaxy}' #{get_features} #{get_layers}"
   end
 end

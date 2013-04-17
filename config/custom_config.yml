@@ -1,0 +1,22 @@
+defaults: &defaults
+  features:
+    -f0: extract best fit
+    -f1: extract percentile 50
+
+  layers:
+    -l0: extract f_mu (SFH)
+    -l1: extract f_mu (IR)
+
+  extract_script_path: path/to/extract_fits_from_hdf5.py
+  safe_emails:
+    - test@test.com
+    - kevin.vinsen@uwa.edu.au
+    - alex.beckley@uwa.edu.au
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
